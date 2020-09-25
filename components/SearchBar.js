@@ -28,7 +28,8 @@ const styles = {
     backgroundColor: `transparent`,
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
-    width: `90%`,
+    flex: 1,
+    marginTop: 0,
   },
   input: {
     backgroundColor: `white`,

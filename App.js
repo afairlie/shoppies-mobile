@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Text} from 'react-native';
-import { Button } from 'react-native-elements';
+import { StyleSheet, View, ScrollView} from 'react-native';
+import { Button, Icon } from 'react-native-elements';
 
 import Logo from './components/Logo'
 import Intro from './components/Intro'
 import Search from './components/SearchBar'
 
-const searchResults = [{id: "tt0078788", title: "Apocalypse Now", year: "1979", nominated: false}, {id: "tt3385516", title: "X-Men: Apocalypse", year: "2016", nominated: false}, {id: "tt0318627", title: "Resident Evil: Apocalypse", year: "2004", nominated: false}, {id: "tt1727776", title: "Scouts Guide to the Zombie Apocalypse", year: "2015", nominated: false}, {id: "tt1673430", title: "Superman/Batman: Apocalypse", year: "2010", nominated: false}, {id: "tt0337103", title: "Crimson Rivers 2: Angels of the Apocalypse", year: "2004", nominated: false}, {id: "tt0102015", title: "Hearts of Darkness: A Filmmaker's Apocalypse", year: "1991", nominated: false}, {id: "tt1649443", title: "[REC] 4: Apocalypse", year: "2014", nominated: false}, {id: "tt6433880", title: "Anna and the Apocalypse", year: "2017", nominated: false}, {id: "tt0435687", title: "The League of Gentlemen's Apocalypse", year: "2005", nominated: false}
+const searchResults = [{id: "tt0078788", title: "Apocalypse Now", year: "1979", nominated: false}, {id: "tt3385516", title: "X-Men: Apocalypse", year: "2016", nominated: false}, {id: "tt0318627", title: "Resident Evil: Apocalypse", year: "2004", nominated: false}, {id: "tt1727776", title: "Scouts Guide to the Zombie Apocalypse", year: "2015", nominated: false}, {id: "tt1673430", title: "Superman/Batman: Apocalypse", year: "2010", nominated: false}, {id: "tt0337103", title: "Crimson Rivers 2: Angels of the Apocalypse", year: "2004", nominated: false}, {id: "tt0102015", title: "Hearts of Darkness: A Filmmaker's Apocalypse", year: "1991", nominated: false}, {id: "tt1649443", title: "[REC] 4: Apocalypse", year: "2014", nominated: false}, {id: "tt6433880", title: "Anna and the Apocalypse", year: "2017", nominated: false}, {id: "tt0435687", title: "The League of Gentlemen's Apocalypse", year: "2005", nominated: false},
 ]
 
 export default function App() {
@@ -26,8 +26,17 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Logo/>
+      <View style={styles.actions}>
+      <Icon
+        raised
+        name='list'
+        type='font-awesome'
+        color='rgb(105,78,46)'
+        reverse
+      />
       <Search/>
-      <View style={styles.main}>
+      </View>
+      <ScrollView contentContainerStyle={styles.main}>
       {state.intro ? <Intro/> 
         : state.results.map((movie, i) => {
         return (
@@ -40,7 +49,7 @@ export default function App() {
           />
         )
       })}
-      </View>
+      </ScrollView>
       <StatusBar style="auto" />
     </View>
   );
@@ -50,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(144,238,144)',
-    paddingTop: 80,
+    paddingTop: 60,
     alignItems: 'center',
   },
   main: {
@@ -60,6 +69,20 @@ const styles = StyleSheet.create({
     alignItems: `center`,
     minHeight: 120,
     marginTop: 10,
+    paddingBottom: 20,
+  },
+  actions: {
+    display: `flex`,
+    flexDirection: `row`,
+    marginTop: 20,
+    marginBottom: 10,
+    paddingVertical: 5,
+    backgroundColor: `rgba(105,78,46, 0.4)`,
+
+    borderTopWidth: 1,
+    borderTopColor: `rgb(105,78,46)`,
+    borderBottomWidth: 1,
+    borderBottomColor: `rgb(105,78,46)`
   },
   result: {
     marginBottom: 5,
