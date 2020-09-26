@@ -3,22 +3,25 @@ import React, {useReducer, useEffect} from 'react';
 import { StyleSheet, View, ScrollView} from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 
-import formatResults from './helpers/formatResults'
+import formatSearchResults from './helpers/formatResults'
 
 import Logo from './components/Logo'
 import Intro from './components/Intro'
 import Search from './components/SearchBar'
 
-// const searchResults = [{id: "tt0078788", title: "Apocalypse Now", year: "1979", nominated: false}, {id: "tt3385516", title: "X-Men: Apocalypse", year: "2016", nominated: false}, {id: "tt0318627", title: "Resident Evil: Apocalypse", year: "2004", nominated: false}, {id: "tt1727776", title: "Scouts Guide to the Zombie Apocalypse", year: "2015", nominated: false}, {id: "tt1673430", title: "Superman/Batman: Apocalypse", year: "2010", nominated: false}, {id: "tt0337103", title: "Crimson Rivers 2: Angels of the Apocalypse", year: "2004", nominated: false}, {id: "tt0102015", title: "Hearts of Darkness: A Filmmaker's Apocalypse", year: "1991", nominated: false}, {id: "tt1649443", title: "[REC] 4: Apocalypse", year: "2014", nominated: false}, {id: "tt6433880", title: "Anna and the Apocalypse", year: "2017", nominated: false}, {id: "tt0435687", title: "The League of Gentlemen's Apocalypse", year: "2005", nominated: false},
-// ]
-
 function reducer(state, action) {
   switch(action.type) {
     case 'SET_RESULTS': {
-      const results = formatResults(action.searchResults, state.nominations)
+      const results = formatSearchResults(action.searchResults, state.nominations)
       const newState = { ...state, results: [...results] }
       if (action.setIntro) { newState.intro = false }
       return newState
+    }
+    case 'NOMINATE': {
+      action.movie.nominated = true;
+      const results = [...state.results]
+      results[action.index] = action.movie
+      return {...state, nominations: [...state.nominations, action.movie], results}
     }
     default: {
       throw new Error('no reducer action of that type')
@@ -38,6 +41,10 @@ export default function App() {
       dispatch({ type: 'SET_RESULTS', searchResults: [], setIntro: true })
     }, 5000)
   }, [])
+
+  function handlePress(movie, index) {
+    dispatch({type: 'NOMINATE', movie, index})
+  }
 
   return (
     <View style={styles.container}>
@@ -62,6 +69,8 @@ export default function App() {
             title={`${movie.title}, ${movie.year}`}
             titleStyle={{color: `rgb(0,100,0)`, fontSize: 12}}
             buttonStyle={styles.result}
+            onPress={() => handlePress(movie, i)}
+            disabled={movie.nominated}
           />
         )
       })}

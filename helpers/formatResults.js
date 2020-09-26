@@ -1,4 +1,4 @@
-export default function formatResults(results, nominations) {
+export default function formatSearchResults(results, nominations) {
 
   if (!results) {
     return []
