@@ -7,7 +7,7 @@ import useDebounce from '../hooks/useDebouce'
 export default function Search({dispatch}) {
   const [value, setValue] = useState('')
 
-  const debounced = useDebounce(value, 500)
+  const debounced = useDebounce(value, 500).trim()
 
   useEffect(() => {
     if (debounced) {
