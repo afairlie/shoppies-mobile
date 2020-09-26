@@ -1,24 +1,40 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-elements';
 
+import useDebounce from '../hooks/useDebouce'
 
-export default function Search() {
-  const [term, setTerm] = useState('')
-  const search = useRef(null)
 
-  function handleChange(term) {
-    setTerm(term)
+export default function Search({dispatch}) {
+  const [value, setValue] = useState('')
+
+  const debounced = useDebounce(value, 500)
+
+  useEffect(() => {
+    if (debounced) {
+      console.log('...fetching from api')
+      fetch(`https://www.omdbapi.com/?apikey=538adb24&s=${debounced}&type=movie`)
+      .then(res => 
+        res.ok ? res.json() 
+          : Error('omodb api search error'))
+      .then(res => dispatch({type: 'SET_RESULTS', searchResults: res.Search}))
+    }
+    else {
+      dispatch({type: 'SET_RESULTS', searchResults: []})
+    }
+  }, [debounced])
+
+  function handleChange(value) {
+    setValue(value)
   }
 
   return (
     <SearchBar
-    ref={search}
     round
     containerStyle={styles.container}
     inputContainerStyle={styles.input}
     placeholder='search a movie'
     onChangeText={handleChange}
-    value={term}
+    value={value}
     />
   )
 }
@@ -29,28 +45,8 @@ const styles = {
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     flex: 1,
-    marginTop: 0,
   },
   input: {
     backgroundColor: `white`,
   }
 }
-
-// const styles = StyleSheet.create({
-//   input: {
-//     backgroundColor: `white`,
-//     width: `75%`,
-//     borderRadius: 20,
-//     padding: 5,
-//     paddingLeft: 15,
-
-//     shadowRadius: 2,
-//     shadowColor: `black`,
-//     shadowOpacity: 1,
-//     shadowOffset: {
-//       height: 2,
-//       width: 0
-//     },
-//     overflow: `hidden`
-//   }
-// });
