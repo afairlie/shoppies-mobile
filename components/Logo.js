@@ -1,20 +1,19 @@
 import React from 'react'
-import {Text, StyleSheet, Image} from 'react-native'
+import {View, StyleSheet, Image} from 'react-native'
 
 export default function Logo() {
-  // return (<Text style={styles.logo}>Shoppies 🎞</Text>)
-  return (<Image style={styles.logo} source={require('../assets/logo.png')}></Image>)
+  return (
+    <View style={styles.container}>
+      <Image style={styles.logo} source={require('../assets/logo.png')}></Image>
+    </View>
+  )
 }
 
-// const styles = StyleSheet.create({
-//   logo: {
-//     fontFamily: `GillSans-UltraBold`,
-//     fontSize: 40,
-//     color: `#5e4629`,
-//   },
-// });
-
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 45,
+    marginBottom: 10,
+  },
   logo: {
     height: 80,
     width: 360,

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useReducer, useEffect} from 'react';
-import { StyleSheet, View, ScrollView} from 'react-native';
+import { StyleSheet, View, ScrollView, SafeAreaView, Keyboard} from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 
 import formatSearchResults from './helpers/formatResults'
@@ -12,16 +12,21 @@ import Search from './components/SearchBar'
 function reducer(state, action) {
   switch(action.type) {
     case 'SET_RESULTS': {
-      const results = formatSearchResults(action.searchResults, state.nominations)
+      const results = formatSearchResults(action.results, state.nominations)
       const newState = { ...state, results: [...results] }
       if (action.setIntro) { newState.intro = false }
       return newState
     }
     case 'NOMINATE': {
-      action.movie.nominated = true;
-      const results = [...state.results]
-      results[action.index] = action.movie
-      return {...state, nominations: [...state.nominations, action.movie], results}
+      if (!state.nominations.find(m => m.id === action.movie.id) && state.nominations.length < 5) {
+        action.movie.nominated = true;
+        const results = [...state.results]
+        results[action.index] = action.movie
+        return {...state, nominations: [...state.nominations, action.movie], results}
+      } else {
+        // TO DO: send up an alert: you can only nominate 5 films!
+        return state
+      }
     }
     default: {
       throw new Error('no reducer action of that type')
@@ -38,7 +43,7 @@ export default function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch({ type: 'SET_RESULTS', searchResults: [], setIntro: true })
+      dispatch({ type: 'SET_RESULTS', results: [], setIntro: true })
     }, 5000)
   }, [])
 
@@ -47,7 +52,7 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Logo/>
       <View style={styles.actions}>
       <Icon
@@ -76,7 +81,7 @@ export default function App() {
       })}
       </ScrollView>
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -84,7 +89,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(144,238,144)',
-    paddingTop: 60,
     alignItems: 'center',
   },
   main: {

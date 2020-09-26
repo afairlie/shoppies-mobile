@@ -16,10 +16,10 @@ export default function Search({dispatch}) {
       .then(res => 
         res.ok ? res.json() 
           : Error('omodb api search error'))
-      .then(res => dispatch({type: 'SET_RESULTS', searchResults: res.Search}))
+      .then(res => dispatch({type: 'SET_RESULTS', results: res.Search}))
     }
     else {
-      dispatch({type: 'SET_RESULTS', searchResults: []})
+      dispatch({type: 'SET_RESULTS', results: []})
     }
   }, [debounced])
 
@@ -29,7 +29,10 @@ export default function Search({dispatch}) {
 
   return (
     <SearchBar
-    round
+    platform='ios'
+    showCancel
+    cancelButtonTitle='close'
+    cancelButtonProps={{color: `#5e4629`}}
     containerStyle={styles.container}
     inputContainerStyle={styles.input}
     placeholder='search a movie'

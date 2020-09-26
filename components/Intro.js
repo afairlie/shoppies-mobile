@@ -8,19 +8,19 @@ export default function Intro() {
   return (
   <>
   <View style={styles.step}>
-    <View style={styles.count}><Text style={styles.num}>1</Text></View>
+    <View style={styles.numContainer}><Text style={styles.num}>1</Text></View>
     <View style={styles.textContainer}>
-      <Text style={styles.text}>Search for your favourite film</Text>
+    <Text style={styles.text}>Search for your favourite film</Text>
     </View>
   </View>
   <View style={styles.step}>
-    <View style={styles.count}><Text style={styles.num}>2</Text></View>
+    <View style={styles.numContainer}><Text style={styles.num}>2</Text></View>
     <View style={styles.textContainer}>
       <Text style={styles.text}>Nominate it</Text>
     </View>
   </View>
   <View style={styles.step}>
-    <View style={styles.count}><Text style={styles.num}>3</Text></View>
+    <View style={styles.numContainer}><Text style={styles.num}>3</Text></View>
     <View style={styles.textContainer}>
       <Text style={styles.text}>Repeat!</Text>
     </View>
@@ -38,8 +38,6 @@ const styles = StyleSheet.create({
     flexDirection: `row`,
     justifyContent: `flex-start`,
     alignItems: `center`,
-    marginVertical: 5,
-    marginLeft: 15,
   },
   lastStep: {
     display: `flex`,
@@ -47,32 +45,15 @@ const styles = StyleSheet.create({
     justifyContent: `flex-start`,
     alignItems: `center`,
     marginTop: 30,
-    // backgroundColor: `rgb(238,232,170)`,
-    // width: 400,
-    // height: 100,
-    // paddingLeft: 40,
   },
-  count: {
+  numContainer: {
     borderRadius: 20,
     backgroundColor: `white`,
     width: 30,
     height: 30,
     display: `flex`,
     justifyContent: `center`,
-    alignItems: `center`
-  },
-  textContainer: {
-    display: `flex`, 
-    justifyContent: `center`, 
-    paddingTop: 8, 
-    paddingLeft: 20,
-    width: 300,
-  },
-  text: {
-    fontFamily: `HoeflerText-Black`,
-    fontSize: 25,
-    color: `#5e4629`,
-    paddingLeft: 2,
+    alignItems: `center`,
   },
   num: {
     fontFamily: `Baskerville-Bold`,
@@ -80,5 +61,18 @@ const styles = StyleSheet.create({
     color: `#5e4629`,
     paddingLeft: 2,
     paddingTop: 1,
+  },
+  textContainer: {
+    paddingTop: 8, 
+    marginLeft: 20,
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: `#5e4629`,
+  },
+  text: {
+    fontFamily: `Avenir-Heavy`,
+    fontSize: 25,
+    color: `#5e4629`,
+    paddingLeft: 2,
   },
 });
