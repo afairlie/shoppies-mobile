@@ -1,8 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
-import { Badge } from 'react-native-elements'
-
-// textStyle={{color: `rgb(105,78,46)`}}
 
 export default function Intro() {
   return (

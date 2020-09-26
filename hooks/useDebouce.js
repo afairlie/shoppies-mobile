@@ -5,7 +5,6 @@ export default function useDebounce(value, ms) {
 
   useEffect(() => {
     const timeout = setTimeout(() => setDebounced(value), ms);
-    // cleanup to prevent repeated calls
     return () => clearTimeout(timeout);
   }, [value, ms])
 

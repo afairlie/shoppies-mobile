@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useReducer, useEffect} from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, Alert, Modal, Pressable } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView, Alert, Modal} from 'react-native';
 import {BlurView} from 'expo-blur'
 import { Button, Icon } from 'react-native-elements';
 
@@ -41,7 +41,6 @@ function reducer(state, action) {
       }
     }
     case 'REMOVE_NOMINATION': {
-      // {type: 'REMOVE_NOMINATION', movie, index: i}
       action.movie.nominated = false;
       const results = [...state.results]
       results[action.index] = action.movie
@@ -112,13 +111,28 @@ export default function App() {
                   return (
                       <View style={styles.nominations} key={i}>
                         <Text style={styles.movie}>{`${movie.title}, ${movie.year}`}</Text>
-                        <Button title='remove' type='clear' containerStyle={styles.remove} onPress={() => dispatch({type: 'REMOVE_NOMINATION', movie, index: i})} titleStyle={{color: `rgb(255,69,0)`}}/>
+                        <Button 
+                          title='remove' 
+                          type='clear' 
+                          containerStyle={styles.remove} 
+                          onPress={() => 
+                            dispatch({type: 'REMOVE_NOMINATION', movie, index: i})} 
+                          titleStyle={{color: `rgb(255,69,0)`}}/>
                       </View>
                     )
                   }) : (
-                    <Text style={styles.nominations}>You don't have any nominations yet. Search a movie, and select it from the search results to add it to your nominations!</Text>
+                    <Text style={styles.nominations}>
+                      You don't have any nominations yet. Search a movie, and select it from the search results to add it to your nominations!
+                    </Text>
                   )}
-                <Button raised type='outline' title='close' onPress={() => dispatch({type: 'TOGGLE_MODAL'})} buttonStyle={{borderColor: `rgb(0,100,0)`}} titleStyle={{color: `rgb(0,100,0)`}} />
+                <Button 
+                  raised 
+                  type='outline' 
+                  title='close' 
+                  onPress={() => 
+                    dispatch({type: 'TOGGLE_MODAL'})} 
+                  buttonStyle={{borderColor: `rgb(0,100,0)`}} 
+                  titleStyle={{color: `rgb(0,100,0)`}}/>
               </View>
             </View>
           </BlurView>
