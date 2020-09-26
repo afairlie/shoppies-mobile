@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useReducer, useEffect} from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView, Keyboard} from 'react-native';
+import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 
 import formatSearchResults from './helpers/formatResults'
+import DismissKeyboard from './wrappers/DismissKeyboard'
 
 import Logo from './components/Logo'
 import Intro from './components/Intro'
@@ -52,6 +53,7 @@ export default function App() {
   }
 
   return (
+    <DismissKeyboard>
     <SafeAreaView style={styles.container}>
       <Logo/>
       <View style={styles.actions}>
@@ -82,6 +84,7 @@ export default function App() {
       </ScrollView>
       <StatusBar style="auto" />
     </SafeAreaView>
+    </DismissKeyboard>
   );
 }
 
