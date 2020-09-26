@@ -42,10 +42,17 @@ function reducer(state, action) {
     }
     case 'REMOVE_NOMINATION': {
       action.movie.nominated = false;
-      const results = [...state.results]
-      results[action.index] = action.movie
-      const newNominations = state.nominations.filter(movie => movie.id !== action.movie.id)
-      return {...state, nominations: [...newNominations], results}
+      const inSearchResults = state.results.find(m => m.id === action.movie.id)
+      // if movie is in results, set nominated to false
+      if (inSearchResults) {
+        const results = [...state.results]
+        results.splice(action.index, 1, inSearchResults)
+        const newNominations = state.nominations.filter(movie => movie.id !== action.movie.id)
+        return {...state, nominations: [...newNominations], results}
+      } else {
+        const newNominations = state.nominations.filter(movie => movie.id !== action.movie.id)
+        return {...state, nominations: [...newNominations]}
+      }
     }
     default: {
       throw new Error('no reducer action of that type')
@@ -107,24 +114,26 @@ export default function App() {
             <View style={styles.modal}>
               <Text style={styles.modalTitle}>Your nominations...</Text>
               <View style={styles.modalContents} >
-                {state.nominations.length !== 0 ? state.nominations.map((movie, i) => {
-                  return (
-                      <View style={styles.nominations} key={i}>
-                        <Text style={styles.movie}>{`${movie.title}, ${movie.year}`}</Text>
-                        <Button 
-                          title='remove' 
-                          type='clear' 
-                          containerStyle={styles.remove} 
-                          onPress={() => 
-                            dispatch({type: 'REMOVE_NOMINATION', movie, index: i})} 
-                          titleStyle={{color: `rgb(255,69,0)`}}/>
-                      </View>
-                    )
-                  }) : (
-                    <Text style={styles.nominations}>
-                      You don't have any nominations yet. Search a movie, and select it from the search results to add it to your nominations!
-                    </Text>
-                  )}
+                <View style={styles.nominations}>
+                  {state.nominations.length !== 0 ? state.nominations.map((movie, i) => {
+                    return (
+                        <View style={styles.nomination} key={i}>
+                          <Text style={styles.movie}>{`${movie.title}, ${movie.year}`}</Text>
+                          <Button 
+                            title='remove' 
+                            type='clear' 
+                            containerStyle={styles.remove} 
+                            onPress={() => 
+                              dispatch({type: 'REMOVE_NOMINATION', movie, index: i})} 
+                            titleStyle={{color: `rgb(255,69,0)`}}/>
+                        </View>
+                      )
+                    }) : (
+                      <Text style={styles.nominations}>
+                        You don't have any nominations yet. Search a movie, and select it from the search results to add it to your nominations!
+                      </Text>
+                    )}
+                  </View>
                 <Button 
                   raised 
                   type='outline' 
@@ -184,6 +193,11 @@ const styles = StyleSheet.create({
     justifyContent: `space-between`
   },
   nominations: {
+    display: `flex`,
+    flex: 1,
+    justifyContent: `flex-start`
+  },
+  nomination: {
     display: `flex`,
     flexDirection: `row`,
     alignItems: `center`,
