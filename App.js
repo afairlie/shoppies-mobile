@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useReducer, useEffect} from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, Alert, Modal } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView, Alert, Modal, Pressable } from 'react-native';
 import {BlurView} from 'expo-blur'
 import { Button, Icon } from 'react-native-elements';
 
@@ -13,6 +13,9 @@ import Search from './components/SearchBar'
 
 function reducer(state, action) {
   switch(action.type) {
+    case 'TOGGLE_MODAL': {
+      return {...state, listModal: !state.listModal}
+    }
     case 'SET_RESULTS': {
       const results = formatSearchResults(action.results, state.nominations)
       const newState = { ...state, results: [...results] }
@@ -26,8 +29,6 @@ function reducer(state, action) {
         results[action.index] = action.movie
         return {...state, nominations: [...state.nominations, action.movie], results}
       } else {
-        let displayModal = false;
-        // TO DO: send up an alert: you can only nominate 5 films!
         Alert.alert(
           "Oops!",
           "You can only nominate 5 films",
@@ -39,8 +40,13 @@ function reducer(state, action) {
         return state
       }
     }
-    case 'TOGGLE_MODAL': {
-      return {...state, listModal: !state.listModal}
+    case 'REMOVE_NOMINATION': {
+      // {type: 'REMOVE_NOMINATION', movie, index: i}
+      action.movie.nominated = false;
+      const results = [...state.results]
+      results[action.index] = action.movie
+      const newNominations = state.nominations.filter(movie => movie.id !== action.movie.id)
+      return {...state, nominations: [...newNominations], results}
     }
     default: {
       throw new Error('no reducer action of that type')
@@ -101,20 +107,19 @@ export default function App() {
           <BlurView tint='dark' intensity={5} style={styles.modalBackground}>
             <View style={styles.modal}>
               <Text style={styles.modalTitle}>Your nominations...</Text>
-              {state.nominations.map((movie, i) => {
-                return (
-                  <Button 
-                    key={i} 
-                    type='outline'
-                    title={`${movie.title}, ${movie.year}`}
-                    titleStyle={{color: `rgb(0,100,0)`, fontSize: 12}}
-                    buttonStyle={styles.result}
-                    onPress={() => handlePress(movie, i)}
-                    disabled={movie.nominated}
-                  />
-                )
-              })}
-              <Button type='outline' title='close' onPress={() => dispatch({type: 'TOGGLE_MODAL'})}/>
+              <View style={styles.modalContents} >
+                {state.nominations.length !== 0 ? state.nominations.map((movie, i) => {
+                  return (
+                      <View style={styles.nominations} key={i}>
+                        <Text style={styles.movie}>{`${movie.title}, ${movie.year}`}</Text>
+                        <Button title='remove' type='clear' containerStyle={styles.remove} onPress={() => dispatch({type: 'REMOVE_NOMINATION', movie, index: i})} titleStyle={{color: `rgb(255,69,0)`}}/>
+                      </View>
+                    )
+                  }) : (
+                    <Text style={styles.nominations}>You don't have any nominations yet. Search a movie, and select it from the search results to add it to your nominations!</Text>
+                  )}
+                <Button raised type='outline' title='close' onPress={() => dispatch({type: 'TOGGLE_MODAL'})} buttonStyle={{borderColor: `rgb(0,100,0)`}} titleStyle={{color: `rgb(0,100,0)`}} />
+              </View>
             </View>
           </BlurView>
         </Modal>
@@ -157,7 +162,30 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 5,
     color: `rgb(0,100,0)`,
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  modalContents: {
+    display: `flex`,
+    flex: 1,
+    justifyContent: `space-between`
+  },
+  nominations: {
+    display: `flex`,
+    flexDirection: `row`,
+    alignItems: `center`,
+    marginBottom: 5,
+    paddingHorizontal: 5,
+    color: `#5e4629`,
+    fontSize: 20,
+  },
+  movie: {
+    display: `flex`,
+    flex: 3,
+    color: `#5e4629`, 
+  },
+  remove: {
+    display: `flex`,
+    flex: 1,
   },
   actions: {
     display: `flex`,
