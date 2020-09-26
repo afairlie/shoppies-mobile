@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useReducer, useEffect} from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, View, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 
 import formatSearchResults from './helpers/formatResults'
@@ -26,6 +26,20 @@ function reducer(state, action) {
         return {...state, nominations: [...state.nominations, action.movie], results}
       } else {
         // TO DO: send up an alert: you can only nominate 5 films!
+        Alert.alert(
+          "Oops!",
+          "You can only nominate 5 films",
+          [
+            { text: "cancel", onPress: () => {}, style: 'cancel' },
+            {
+              text: "nominations",
+              onPress: () => {
+                // navigate to nominations
+              }
+            },
+          ],
+          { cancelable: false }
+        )
         return state
       }
     }
