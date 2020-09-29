@@ -42,11 +42,10 @@ function reducer(state, action) {
     }
     case 'REMOVE_NOMINATION': {
       action.movie.nominated = false;
-      const inSearchResults = state.results.find(m => m.id === action.movie.id)
-      // if movie is in results, set nominated to false
-      if (inSearchResults) {
+      // if movie is in results, updated nominated to false
+      if (state.results.includes(m => m.id === action.movie.id)) {
         const results = [...state.results]
-        results.splice(action.index, 1, inSearchResults)
+        results.splice(state.results.findIndex(m => m.id === action.movie.id), 1, action.movie)
         const newNominations = state.nominations.filter(movie => movie.id !== action.movie.id)
         return {...state, nominations: [...newNominations], results}
       } else {
